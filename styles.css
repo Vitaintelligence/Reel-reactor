@@ -206,8 +206,54 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   SLIDES STRIP
+   GLOBAL ACTIONS
 ═══════════════════════════════════════════ */
+/* ─── GLOBAL ACTIONS ────────────────────────────────────────── */
+.global-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.global-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+#dl-zip-btn {
+  background: #2a2a35;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+#dl-zip-btn:hover:not(:disabled) {
+  background: #3a3a45;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.video-btn {
+  background: linear-gradient(135deg, #ff3c3c, #cc0000);
+  color: #ffffff;
+}
+.video-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 60, 60, 0.4);
+}
+
+.global-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── SLIDES DISPLAY ──────────────────────────────────────── */
 .slides-section {
   padding: 8px 36px 80px;
 }

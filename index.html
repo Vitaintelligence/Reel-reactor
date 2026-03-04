@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!--
     NOTE: ES Modules (type="module") require a server due to browser CORS on file:// URLs.
     Quick options:
@@ -52,6 +53,12 @@
 
     <!-- SLIDES STRIP -->
     <section class="slides-section" id="slides-section" aria-label="Generated slides">
+        <!-- GLOBAL DOWNLOADS -->
+        <div class="global-actions" id="global-actions" style="display: none;">
+            <button id="dl-zip-btn" class="global-btn">📦 Download Carousel (.zip)</button>
+            <button id="dl-vid-btn" class="global-btn video-btn">🎬 Download Video (.webm)</button>
+        </div>
+
         <div class="slides-strip" id="slides-strip">
             <!-- Cards injected by slides.js -->
             <div class="empty-state" id="empty-state">

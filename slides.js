@@ -409,3 +409,110 @@ function _hideEmpty() {
     const el = document.getElementById("empty-state");
     if (el) el.style.display = "none";
 }
+
+/* ─── GLOBAL EXPORT FUNCTIONS ─────────────────────────────── */
+
+export async function downloadAllAsZip(slidesData, imageResults) {
+    if (!window.JSZip) {
+        alert("JSZip library not loaded. Check internet connection.");
+        return;
+    }
+    const zip = new JSZip();
+
+    for (let i = 0; i < 5; i++) {
+        const bgSource = await _getBgSource(imageResults[i]);
+        const canvas = _renderFullCanvas(slidesData[i], i, bgSource);
+        const blob = await new Promise(r => canvas.toBlob(r, "image/png"));
+        zip.file(`maxify-slide-${i + 1}.png`, blob);
+    }
+
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "maxify-carousel.zip";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+export async function downloadAllAsVideo(slidesData, imageResults) {
+    // 1. Render all 5 canvases into memory
+    const canvases = [];
+    for (let i = 0; i < 5; i++) {
+        const bgSource = await _getBgSource(imageResults[i]);
+        canvases.push(_renderFullCanvas(slidesData[i], i, bgSource));
+    }
+
+    // 2. Setup recorder canvas
+    const recCanvas = document.createElement("canvas");
+    recCanvas.width = W; 
+    recCanvas.height = H;
+    const ctx = recCanvas.getContext("2d");
+
+    // TikTok psychological pacing (ms)
+    // Hook (fast), Context (read time), Surprise (punchy), Escalation (hype), Payoff (linger)
+    const timings = [2000, 2500, 1500, 2000, 3000];
+    
+    // Capture 30fps stream
+    const stream = recCanvas.captureStream(30); 
+    const recorder = new MediaRecorder(stream, { mimeType: "video/webm;codecs=vp9" });
+    const chunks = [];
+    recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    
+    return new Promise((resolve) => {
+        recorder.onstop = () => {
+            const blob = new Blob(chunks, { type: "video/webm" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "maxify-reel.webm";
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+            resolve();
+        };
+
+        recorder.start();
+
+        let startTime = null;
+        function drawFrame(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            let cumulative = 0;
+            let slideIndex = 4;
+            let totalDuration = 0;
+            timings.forEach(t => totalDuration += t);
+
+            for (let i = 0; i < 5; i++) {
+                cumulative += timings[i];
+                if (elapsed <= cumulative) {
+                    slideIndex = i;
+                    break;
+                }
+            }
+
+            ctx.drawImage(canvases[slideIndex], 0, 0);
+
+            if (elapsed < totalDuration) {
+               requestAnimationFrame(drawFrame);
+            } else {
+               recorder.stop();
+            }
+        }
+        requestAnimationFrame(drawFrame);
+    });
+}
+
+async function _getBgSource(imgResult) {
+    const hasUrl = (imgResult?.type === "local" || imgResult?.type === "remote") && imgResult.url;
+    if (hasUrl) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
+            img.src = imgResult.url;
+        });
+    }
+    return imgResult?.canvas || null;
+}
