@@ -11,7 +11,7 @@ Usage:
     python scrape.py --dry-run          # print plan without downloading
 
 Output:
-    public/SLIDESHOW_ASSETS/           <- all images, renamed
+    static_assets/SLIDESHOW_ASSETS/           <- all images, renamed
     image_library.json                 <- manifest for images.js
 """
 
@@ -215,7 +215,7 @@ def scrape_category(pinterest, folder_rel, prefix, keywords, count, dry_run=Fals
         else:
             shutil.move(src, dst)
 
-        web_paths.append(f"/public/SLIDESHOW_ASSETS/{folder_rel}/{new_name}")
+        web_paths.append(f"/static_assets/SLIDESHOW_ASSETS/{folder_rel}/{new_name}")
 
     # Remove temp dir
     shutil.rmtree(temp_dir, ignore_errors=True)

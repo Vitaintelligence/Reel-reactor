@@ -64,7 +64,7 @@ let _loadPromise = null;  // Shared promise so parallel calls don't double-fetch
  * preloadImages(slidesData) → Promise<ImageResult[]>
  *
  * Returns one ImageResult per slide:
- *   { type: "local",    url: "/public/..." }        — local scraped image
+ *   { type: "local",    url: "/static_assets/..." }        — local scraped image
  *   { type: "remote",   url: "https://pinimg..." }  — Pinterest via proxy
  *   { type: "fallback", canvas: HTMLCanvasElement } — dark gradient
  */
