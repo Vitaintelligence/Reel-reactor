@@ -137,25 +137,37 @@ const ROLE_QUERIES = [
 ];
 
 async function _fetchProxy(slideIndex, aiHint) {
-    const options = ROLE_QUERIES[slideIndex] || ROLE_QUERIES[0];
-    const query = aiHint
-        ? `${aiHint} dark`
-        : options[Math.floor(Math.random() * options.length)];
+    const defaultQueries = ROLE_QUERIES[slideIndex] || ROLE_QUERIES[0];
+    const query = aiHint ? aiHint : defaultQueries[Math.floor(Math.random() * defaultQueries.length)];
 
     try {
+        console.log(`[images] Slide ${slideIndex + 1} ← fetching proxy for "${query}"`);
         const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+
         if (!res.ok) throw new Error(`Proxy ${res.status}`);
+
         const data = await res.json();
-        const pins = (data.items || []).filter(p => p.media?.images);
-        if (!pins.length) throw new Error("No pins");
 
-        const pin = pins[Math.floor(Math.random() * Math.min(10, pins.length))];
-        const imgs = pin.media.images;
-        const url = imgs["1200x"]?.url || imgs.original?.url || imgs["750x"]?.url;
-        if (!url) throw new Error("No URL");
+        // Some Pinterest proxy endpoints return pins directly or under .items
+        const pins = data.items ? data.items : data;
 
-        console.log(`[images] Slide ${slideIndex + 1} ← Pinterest proxy "${query}"`);
-        return { type: "remote", url, pinId: pin.id };
+        if (!Array.isArray(pins) || !pins.length) {
+            throw new Error("No pins returned from proxy");
+        }
+
+        // Find a valid image among top results
+        for (let i = 0; i < Math.min(10, pins.length); i++) {
+            const pin = pins[i];
+            const imgs = pin?.media?.images;
+            if (imgs) {
+                const url = imgs["1200x"]?.url || imgs.original?.url || imgs["750x"]?.url;
+                if (url) {
+                    return { type: "remote", url, pinId: pin.id };
+                }
+            }
+        }
+
+        throw new Error("No valid image URLs found in pins");
 
     } catch (err) {
         console.warn(`[images] Slide ${slideIndex + 1} — proxy failed (${err.message}), using gradient`);

@@ -12,13 +12,13 @@ const W = 1080;
 const H = 1920;
 const FONT_FAMILY = "'Inter', -apple-system, sans-serif";
 
-/* Per-slide layout: pill Y, headline Y, sub Y, scrim style */
+/* Per-slide layout: pill Y, headline Y, sub Y, font sizes */
 const LAYOUTS = [
-    { region: "top", pillY: 210, headY: 370, subY: 530, fontSize: 92, lh: 112 }, // HOOK
-    { region: "middle", pillY: 760, headY: 930, subY: 1090, fontSize: 74, lh: 90 }, // CONTEXT
-    { region: "middle", pillY: 760, headY: 930, subY: 1090, fontSize: 74, lh: 90 }, // SURPRISE
-    { region: "middle", pillY: 760, headY: 930, subY: 1090, fontSize: 74, lh: 90 }, // ESCALATION
-    { region: "bottom", pillY: 1260, headY: 1400, subY: 1560, fontSize: 64, lh: 80 }, // PAYOFF
+    { region: "top", pillY: 250, headY: 400, subY: 530, fontSize: 78, lh: 96, subSize: 42, subLh: 60 }, // HOOK
+    { region: "middle", pillY: 780, headY: 930, subY: 1060, fontSize: 64, lh: 84, subSize: 42, subLh: 60 }, // CONTEXT
+    { region: "middle", pillY: 780, headY: 930, subY: 1060, fontSize: 64, lh: 84, subSize: 42, subLh: 60 }, // SURPRISE
+    { region: "middle", pillY: 780, headY: 930, subY: 1060, fontSize: 64, lh: 84, subSize: 42, subLh: 60 }, // ESCALATION
+    { region: "bottom", pillY: 1280, headY: 1410, subY: 1540, fontSize: 58, lh: 76, subSize: 42, subLh: 60 }, // PAYOFF
 ];
 
 /* ─── PUBLIC API ──────────────────────────────────────────────────── */
@@ -291,25 +291,25 @@ function _drawSlideText(ctx, slide, layout) {
         x: W / 2,
         y: subY,
         maxWidth: 860,
-        fontSize: 50,
+        fontSize: layout.subSize,
         fontWeight: 400,
         color: "rgba(255,255,255,0.82)",
         shadow: true,
-        lineHeight: 68
+        lineHeight: layout.subLh
     });
 }
 
 function _drawPill(ctx, text, cx, cy) {
-    ctx.font = `700 34px ${FONT_FAMILY}`;
+    ctx.font = `700 32px ${FONT_FAMILY}`;
     const tw = ctx.measureText(text).width;
-    const pw = tw + 72;
-    const ph = 34 + 36;
+    const pw = tw + 60;
+    const ph = 32 + 24;
     const px = cx - pw / 2;
     const py = cy - ph / 2;
 
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    _rrPath(ctx, px, py, pw, ph, 60);
+    _rrPath(ctx, px, py, pw, ph, 40);
     ctx.fill();
 
     ctx.fillStyle = "#000000";
@@ -445,20 +445,20 @@ export async function downloadAllAsVideo(slidesData, imageResults) {
 
     // 2. Setup recorder canvas
     const recCanvas = document.createElement("canvas");
-    recCanvas.width = W; 
+    recCanvas.width = W;
     recCanvas.height = H;
     const ctx = recCanvas.getContext("2d");
 
     // TikTok psychological pacing (ms)
     // Hook (fast), Context (read time), Surprise (punchy), Escalation (hype), Payoff (linger)
     const timings = [2000, 2500, 1500, 2000, 3000];
-    
+
     // Capture 30fps stream
-    const stream = recCanvas.captureStream(30); 
+    const stream = recCanvas.captureStream(30);
     const recorder = new MediaRecorder(stream, { mimeType: "video/webm;codecs=vp9" });
     const chunks = [];
     recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
-    
+
     return new Promise((resolve) => {
         recorder.onstop = () => {
             const blob = new Blob(chunks, { type: "video/webm" });
@@ -494,9 +494,9 @@ export async function downloadAllAsVideo(slidesData, imageResults) {
             ctx.drawImage(canvases[slideIndex], 0, 0);
 
             if (elapsed < totalDuration) {
-               requestAnimationFrame(drawFrame);
+                requestAnimationFrame(drawFrame);
             } else {
-               recorder.stop();
+                recorder.stop();
             }
         }
         requestAnimationFrame(drawFrame);

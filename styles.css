@@ -233,6 +233,7 @@ body {
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 #dl-zip-btn:hover:not(:disabled) {
   background: #3a3a45;
   border-color: rgba(255, 255, 255, 0.2);
@@ -242,6 +243,7 @@ body {
   background: linear-gradient(135deg, #ff3c3c, #cc0000);
   color: #ffffff;
 }
+
 .video-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(255, 60, 60, 0.4);
@@ -411,10 +413,10 @@ body {
   color: #000000;
   font-family: var(--font);
   font-weight: 800;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   letter-spacing: -0.01em;
-  padding: 8px 20px;
-  border-radius: 100px;
+  padding: 6px 16px;
+  border-radius: 40px;
   white-space: nowrap;
   max-width: 93%;
   overflow: hidden;
@@ -427,8 +429,8 @@ body {
 .card-headline {
   font-family: var(--font);
   font-weight: 800;
-  font-size: 1.6rem;
-  line-height: 1.15;
+  font-size: 1.4rem;
+  line-height: 1.25;
   color: #ffffff;
   text-align: center;
   text-shadow: 0 2px 28px rgba(0, 0, 0, 0.95), 0 1px 6px rgba(0, 0, 0, 0.85);
@@ -439,7 +441,7 @@ body {
 .card-sub {
   font-family: var(--font);
   font-weight: 400;
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.88);
   text-align: center;
