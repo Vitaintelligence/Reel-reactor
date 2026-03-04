@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reel Builder — Maxify</title>
+    <meta name="description"
+        content="Generate viral looksmaxx & rizz reels for Maxify — AI-powered slide copy + images in seconds." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --surface2: #1a1a1a;
+            --border: #222222;
+            --accent: #ff3c3c;
+            --accent-dim: rgba(255, 60, 60, 0.15);
+            --text: #f0f0f0;
+            --muted: #666666;
+            --gold: #f5a623;
+            --blue: #3b82f6;
+            --green: #22c55e;
+            --white: #e5e5e5;
+
+            --role-hook: #ff3c3c;
+            --role-context: #f5a623;
+            --role-surprise: #3b82f6;
+            --role-escalation: #e5e5e5;
+            --role-payoff: #22c55e;
+
+            --card-w: 380px;
+            --card-h: 675px;
+        }
+
+        html,
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── HEADER ── */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(10, 10, 10, 0.92);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+
+        .logo-text span {
+            color: var(--accent);
+        }
+
+        .header-tag {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        /* ── HERO / CONTROLS ── */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 64px 24px 48px;
+            text-align: center;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 900;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+        }
+
+        h1 em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .hero-sub {
+            color: var(--muted);
+            font-size: 0.95rem;
+            max-width: 420px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        select#niche {
+            appearance: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            padding: 14px 48px 14px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            outline: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            transition: border-color 0.2s;
+            min-width: 220px;
+        }
+
+        select#niche:hover,
+        select#niche:focus {
+            border-color: var(--accent);
+        }
+
+        select#niche option {
+            background: #1a1a1a;
+        }
+
+        button#generate {
+            background: var(--accent);
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 4px 24px rgba(255, 60, 60, 0.3);
+        }
+
+        button#generate:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(255, 60, 60, 0.45);
+        }
+
+        button#generate:active {
+            transform: translateY(0);
+        }
+
+        button#generate:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ── STATUS ── */
+        #status {
+            margin-top: 24px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            min-height: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── SLIDES STRIP ── */
+        #slides-section {
+            padding: 0 24px 80px;
+        }
+
+        .section-label {
+            text-align: center;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 32px;
+        }
+
+        #slides-wrap {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ── SLIDE CARD ── */
+        .slide-card-outer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slide-card {
+            width: var(--card-w);
+            height: var(--card-h);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            background: var(--surface2);
+            flex-shrink: 0;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        .slide-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.8);
+        }
+
+        .slide-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.4s;
+        }
+
+        .slide-bg.loading {
+            opacity: 0;
+        }
+
+        .slide-bg.loaded {
+            opacity: 1;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    rgba(0, 0, 0, 0.05) 0%,
+                    rgba(0, 0, 0, 0.20) 35%,
+                    rgba(0, 0, 0, 0.72) 65%,
+                    rgba(0, 0, 0, 0.92) 100%);
+        }
+
+        /* top row */
+        .slide-top {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            right: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .slide-num {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: #fff;
+        }
+
+        .slide-role-pill {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 100px;
+            color: #000;
+        }
+
+        /* bottom content */
+        .slide-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px 22px 28px;
+        }
+
+        .slide-role-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.7;
+        }
+
+        .slide-headline {
+            font-family: 'Syne', sans-serif;
+            font-weight: 900;
+            font-size: 1.45rem;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .slide-sub {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 16px;
+        }
+
+        .slide-cta {
+            display: inline-block;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 8px 18px;
+            border-radius: 100px;
+            color: #000;
+        }
+
+        /* branding watermark */
+        .slide-brand {
+            position: absolute;
+            bottom: 28px;
+            right: 18px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.6rem;
+            letter-spacing: 0.06em;
+            color: rgba(255, 255, 255, 0.35);
+            text-transform: uppercase;
+        }
+
+        /* ── DOWNLOAD BUTTON ── */
+        .dl-btn {
+            background: var(--surface);
+            color: var(--muted);
+            border: 1px solid var(--border);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+
+        .dl-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        .dl-icon {
+            font-size: 0.9rem;
+        }
+
+        /* ── APP BADGE (replaces niche dropdown) ── */
+        .app-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.01em;
+            padding: 12px 22px;
+            border-radius: 12px;
+        }
+
+        .app-badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* ── PINTEREST BUTTON ── */
+        .pin-btn {
+            background: #e60023;
+            color: #fff;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s, transform 0.15s;
+            white-space: nowrap;
+        }
+
+        .pin-btn:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        .pin-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── BOARD ROW ── */
+        .board-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .board-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            font-family: 'DM Sans', sans-serif;
+            white-space: nowrap;
+        }
+
+        select#board {
+            appearance: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            padding: 10px 40px 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            outline: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            transition: border-color 0.2s;
+            min-width: 200px;
+        }
+
+        select#board:hover,
+        select#board:focus {
+            border-color: #e60023;
+        }
+
+        select#board option {
+            background: #1a1a1a;
+        }
+
+        /* ── PIN ALL ── */
+        .pin-all-wrap {
+            text-align: center;
+            margin-top: 40px;
+            padding-bottom: 16px;
+        }
+
+        .pin-all-btn {
+            background: #e60023;
+            color: #fff;
+            border: none;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.92rem;
+            letter-spacing: 0.02em;
+            padding: 14px 36px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 24px rgba(230, 0, 35, 0.35);
+        }
+
+        .pin-all-btn:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(230, 0, 35, 0.5);
+        }
+
+        .pin-all-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .pin-status {
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .pin-status.ok {
+            color: #22c55e;
+        }
+
+        .pin-status.err {
+            color: var(--accent);
+        }
+
+        /* ── SKELETON ── */
+        .slide-skeleton {
+            width: var(--card-w);
+            height: var(--card-h);
+            border-radius: 20px;
+            background: var(--surface2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-skeleton::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.04) 50%, transparent 100%);
+            animation: shimmer 1.4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center;
+            padding: 28px 24px;
+            border-top: 1px solid var(--border);
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 0.04em;
+        }
+
+        footer span {
+            color: var(--accent);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            header {
+                padding: 16px 20px;
+            }
+
+            .header-tag {
+                display: none;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── HEADER ── -->
+    <header>
+        <div class="logo">
+            <div class="logo-dot"></div>
+            <div class="logo-text">Maxify <span>Reel Builder</span></div>
+        </div>
+        <div class="header-tag">glowrizz.club</div>
+    </header>
+
+    <!-- ── HERO ── -->
+    <section class="hero">
+        <div class="hero-eyebrow">⚡ AI-Powered Content Engine</div>
+        <h1>Build <em>viral reels</em><br />in one click.</h1>
+        <p class="hero-sub">Pick your niche. Hit generate. Get 5 psychology-engineered slides with matched images —
+            ready to post.</p>
+
+        <div class="controls">
+            <div class="app-badge">
+                <span class="app-badge-dot"></span>
+                Maxify
+            </div>
+            <button id="generate" onclick="generateReel()">Generate Reel →</button>
+        </div>
+
+        <!-- Pinterest board selector: shown once boards load -->
+        <div class="board-row" id="board-row" style="display:none">
+            <span class="board-label">📌 Pin to board:</span>
+            <select id="board">
+                <option value="">Loading boards…</option>
+            </select>
+        </div>
+
+        <div id="status"></div>
+    </section>
+
+    <!-- ── SLIDES ── -->
+    <section id="slides-section" style="display:none;">
+        <div class="section-label">Your 5-Slide Reel</div>
+        <div id="slides-wrap"></div>
+
+        <!-- Pin All — shown after slides render + board selected -->
+        <div class="pin-all-wrap" id="pin-all-wrap" style="display:none">
+            <button class="pin-all-btn" id="pin-all-btn" onclick="pinAllSlides()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
+                </svg>
+                Pin All 5 Slides to Pinterest
+            </button>
+            <div class="pin-status" id="pin-all-status"></div>
+        </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+        Built for <span>Maxify</span> · glowrizz.club · AI Looksmaxxing & Rizz Engine
+    </footer>
+
+    <script>
+        /* ─────────────────────────────────────────────
+           CONFIG
+        ───────────────────────────────────────────── */
+        const OPENROUTER_KEY = "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";
+        const OR_MODEL = "google/gemini-2.5-flash";
+        const PINTEREST_TOKEN = ""; // Move to Vercel env var
+        const PINTEREST_APP_ID = "1525626";
+        const PINTEREST_LINK = "https://glowrizz.club";
+
+        /* ─────────────────────────────────────────────
+           CONSTANTS
+        ───────────────────────────────────────────── */
+        const ROLES = [
+            { name: "HOOK", label: "Hook", color: "var(--role-hook)", textColor: "#fff" },
+            { name: "CONTEXT", label: "Context", color: "var(--role-context)", textColor: "#000" },
+            { name: "SURPRISE", label: "Surprise", color: "var(--role-surprise)", textColor: "#fff" },
+            { name: "ESCALATION", label: "Escalation", color: "var(--role-escalation)", textColor: "#000" },
+            { name: "PAYOFF", label: "Payoff", color: "var(--role-payoff)", textColor: "#000" },
+        ];
+
+        /* ─────────────────────────────────────────────
+           PROMPT ENGINE — Random Maxify Feature Angles
+        ───────────────────────────────────────────── */
+        const MAXIFY_FEATURES = [
+            {
+                name: "Mog Battles",
+                fear: "being silently outcompeted by men around you without ever knowing it",
+                angle: "You vs. a celebrity. You vs. your friend. The AI decides who mogs.",
+                features: "Mog Battles, Celebrity Mog, Friend vs. Friend, Global Leaderboard",
+                enemy: "umax and looksmaxx AI only give you a number — Maxify shows you who you lose to and why",
+                hook_words: ["illegal", "banned", "they don't want you to see this"],
+                hook_angle: "The mog battle algorithm they tried to pull from the App Store",
+                controversy: "Most men who think they're mogging are actually getting mogged. That's just the data.",
+                payoff_list: "The Maxify Mog Stack:\n\u2713 Upload your photo (free)\n\u2713 Battle a celebrity\n\u2713 Battle a friend\n\u2713 See your mog score breakdown\n\u2713 Check the global leaderboard\nSave this. Download Maxify free — glowrizz.club",
+                image_queries: ["dramatic dark portrait", "close up face shadow", "sharp contrast minimal", "confident man aesthetic", "transformation glow dark"]
+            },
+            {
+                name: "AskOut",
+                fear: "never knowing if someone actually likes you — and missing the shot because you said nothing",
+                angle: "Anonymous questions. Hidden messages. AI-powered answer reveal. Nobody knows it's you.",
+                features: "AskOut anonymous Q&A, anonymous image & audio messages, play mode, mystery reveal",
+                enemy: "NGL and Sarahah show you anonymous messages but never tell you who it is — AskOut actually reveals it",
+                hook_words: ["hidden", "exposed", "secret", "they don't tell you"],
+                hook_angle: "The anonymous message feature that actually tells you who sent it",
+                controversy: "Someone in your contacts has been thinking about you. You just haven't given them the chance.",
+                payoff_list: "The AskOut Playbook:\n\u2713 Create your AskOut link (free)\n\u2713 Share it anonymously\n\u2713 Receive anonymous Q&A, images, audio\n\u2713 Play the reveal game\n\u2713 Find out who sent it\nSave this. Download Maxify free — glowrizz.club",
+                image_queries: ["dark neon mystery", "phone screen glow night", "silhouette shadow dramatic", "anonymous message aesthetic", "reveal glow dark"]
+            },
+            {
+                name: "AI Looksmaxxing",
+                fear: "being objectively less attractive than you could be — and never knowing what to fix",
+                angle: "AI scans your face. Scores your canthal tilt, hunter eyes, jawline. Shows your potential face morph.",
+                features: "AI Facial Analysis (canthal tilt, hunter eyes, jawline, symmetry), Face Morphing, Transformation Tracking, The Dojo",
+                enemy: "Filters and Facetune hide your flaws. Maxify tells you exactly what they are and how to fix them.",
+                hook_words: ["illegal", "banned", "they hide this", "nobody tells you"],
+                hook_angle: "The facial scan score they almost removed from the App Store",
+                controversy: "Men with negative canthal tilt are rated 34% less attractive on average. Most men have no idea what their tilt is.",
+                payoff_list: "The Looksmax Stack:\n\u2713 AI facial scan (free)\n\u2713 Canthal tilt + hunter eye check\n\u2713 See your face morph potential\n\u2713 Study The Dojo\n\u2713 Track your transformation weekly\nSave this. Download Maxify free — glowrizz.club",
+                image_queries: ["dramatic dark portrait", "close up face shadow", "sharp contrast minimal", "confident man aesthetic", "transformation glow dark"]
+            },
+            {
+                name: "AI Rizzing",
+                fear: "losing her because of one wrong text — and never knowing which one killed it",
+                angle: "Screenshot your chat. AI reads it and tells you exactly what to say next.",
+                features: "Max Rizz Engine (screenshot solver), Opener Generator, Chat Analysis, Rizz Score",
+                enemy: "Dating coaches charge $500/hr to tell you to 'be confident'. Maxify reads your actual conversation and responds.",
+                hook_words: ["hidden", "banned", "they don't want you to use this", "deleted"],
+                hook_angle: "The AI that reads your texts and tells you exactly what to say",
+                controversy: "Most rizz advice actively makes you come across as tryhard. Real rizz is calibrated, not scripted.",
+                payoff_list: "The Rizz Stack:\n\u2713 Screenshot any chat (free)\n\u2713 AI reads her tone + interest level\n\u2713 Get your exact next message\n\u2713 Use the Opener Generator\n\u2713 Track your rizz score\nSave this. Download Maxify free — glowrizz.club",
+                image_queries: ["phone screen night glow", "close up hands texting", "sharp contrast minimal", "confident man phone", "neon dark transformation"]
+            }
+        ];
+
+        function buildPrompt() {
+            /* pick a random feature track each generation */
+            const f = MAXIFY_FEATURES[Math.floor(Math.random() * MAXIFY_FEATURES.length)];
+            window._lastFeature = f.name; /* expose for status message */
+
+            return `You are the world's most dangerous viral content engineer. Your only job: make people stop scrolling, feel something, and download Maxify (glowrizz.club).
+
+Maxify is a free AI app with: AI Looksmaxxing (facial scan, canthal tilt, hunter eyes, jawline scoring, face morph), Mog Battles (you vs celebrity/friend + global leaderboard), AskOut (anonymous Q&A + image + audio messages with reveal mechanic), AI Rizz Engine (screenshot your chat → AI tells you exactly what to say), Opener Generator, The Dojo (looksmaxx theory + science), transformation tracking.
+Competitors it destroys: umax, looksmaxx AI, rizzGPT, NGL, Sarahah — Maxify has ALL their features combined, free.
+
+FEATURE FOCUS THIS REEL: ${f.name}
+Core fear to exploit: ${f.fear}
+Angle: ${f.angle}
+Features to highlight: ${f.features}
+Enemy to name: ${f.enemy}
+Hook inspiration: ${f.hook_angle}
+Controversy seed (slide 3 or 4): ${f.controversy}
+Payoff slide content: ${f.payoff_list}
+
+═══════════════════════════════
+PSYCHOLOGICAL WEAPONS — USE ALL:
+═══════════════════════════════
+
+WEAPON 1 — FORBIDDEN KNOWLEDGE (SLIDE 1, NON-NEGOTIABLE)
+Trigger words: ${f.hook_words.join(", ")}.
+Formula: [Forbidden word] + [specific feature] + [unresolved curiosity gap]
+
+WEAPON 2 — IDENTITY THREAT (at least 2 slides)
+Make them feel THEY specifically are the one affected.
+"If you have X, read this" / "You're probably making this mistake right now"
+
+WEAPON 3 — CURIOSITY GAP (every headline)
+Open a loop. NEVER close it in the same slide.
+
+WEAPON 4 — AUTHORITY CONTRADICTION
+Contradict mainstream. Name the enemy. Position Maxify as what they were hiding.
+
+WEAPON 5 — SOCIAL PROOF + URGENCY STACK
+"1,000+ men used this this week" / "This feature was almost removed" / "The community already knows"
+
+WEAPON 6 — SAVE BAIT (SLIDE 5, NON-NEGOTIABLE)
+Give them a checklist/stack to screenshot. Instruction to save must feel URGENT.
+End line MUST be: "Download Maxify free — glowrizz.club"
+
+WEAPON 7 — COMMENT HOOK (slide 3 or 4)
+Controversial statement that splits opinions and drives comments.
+
+═══════════════════════════════
+EXACT SLIDE FORMULA:
+═══════════════════════════════
+
+SLIDE 1 — THE HOOK
+Forbidden framing + curiosity gap. Tone: Alarming. Urgent. Personal.
+image_query: ${f.image_queries[0]}
+
+SLIDE 2 — THE CONTEXT
+Identity threat + authority contradiction. Name one specific feature. Drop the enemy.
+image_query: ${f.image_queries[1]}
+
+SLIDE 3 — THE SURPRISE
+Controversial comment-bait + unexpected data-flavored claim. Make them argue.
+CTA options: "Agree or disagree?" / "Tell me I'm wrong" / "Comment below"
+image_query: ${f.image_queries[2]}
+
+SLIDE 4 — THE ESCALATION
+Authority contradiction + social proof. Name Maxify as THE solution vs competitors.
+image_query: ${f.image_queries[3]}
+
+SLIDE 5 — THE PAYOFF
+Base it on this exact content (adapt for headline/sub/cta): ${f.payoff_list}
+CTA: "Save this now" / "Screenshot this" / "Download free"
+image_query: ${f.image_queries[4]}
+
+═══════════════════════════════
+FORMATTING — NON-NEGOTIABLE:
+═══════════════════════════════
+- headline: max 8 words. 1-2 words CAPS only. No punctuation except dashes.
+- sub: max 15 words. One sentence. NEVER answers the headline.
+- cta: 2-4 words. Action verb first.
+- image_query: use the ones specified per slide above exactly.
+
+Return ONLY a JSON array. No markdown. No explanation. No extra keys.
+[
+  {"headline":"...","sub":"...","cta":"...","image_query":"..."},
+  {"headline":"...","sub":"...","cta":"...","image_query":"..."},
+  {"headline":"...","sub":"...","cta":"...","image_query":"..."},
+  {"headline":"...","sub":"...","cta":"...","image_query":"..."},
+  {"headline":"...","sub":"...","cta":"...","image_query":"..."}
+]`;
+        }
+
+        /* ─────────────────────────────────────────────
+           STATUS HELPER
+        ───────────────────────────────────────────── */
+        function setStatus(msg, loading = false) {
+            const el = document.getElementById("status");
+            el.innerHTML = loading
+                ? `<div class="spinner"></div><span>${msg}</span>`
+                : `<span>${msg}</span>`;
+        }
+
+        /* ─────────────────────────────────────────────
+           UNSPLASH URL
+        ───────────────────────────────────────────── */
+        function unsplashUrl(query, sig) {
+            const q = encodeURIComponent(query.trim());
+            return `https://source.unsplash.com/1080x1920/?${q}&sig=${sig}`;
+        }
+
+        /* ─────────────────────────────────────────────
+           RENDER SKELETONS
+        ───────────────────────────────────────────── */
+        function renderSkeletons() {
+            const wrap = document.getElementById("slides-wrap");
+            wrap.innerHTML = "";
+            for (let i = 0; i < 5; i++) {
+                const sk = document.createElement("div");
+                sk.className = "slide-skeleton";
+                wrap.appendChild(sk);
+            }
+            document.getElementById("slides-section").style.display = "block";
+        }
+
+        /* ─────────────────────────────────────────────
+           RENDER SLIDES
+        ───────────────────────────────────────────── */
+        function renderSlides(slides) {
+            const wrap = document.getElementById("slides-wrap");
+            wrap.innerHTML = "";
+
+            slides.forEach((slide, i) => {
+                const role = ROLES[i];
+                const imgUrl = unsplashUrl(slide.image_query, i + Date.now());
+
+                /* outer wrapper */
+                const outer = document.createElement("div");
+                outer.className = "slide-card-outer";
+
+                /* card */
+                const card = document.createElement("div");
+                card.className = "slide-card";
+
+                /* bg image */
+                const img = document.createElement("img");
+                img.className = "slide-bg loading";
+                img.alt = slide.image_query;
+                img.crossOrigin = "anonymous";
+                img.src = imgUrl;
+                img.onload = () => {
+                    img.classList.remove("loading");
+                    img.classList.add("loaded");
+                    // Store the resolved URL so pinSlide can use it directly
+                    window._currentSlides[i]._resolvedImgUrl = img.currentSrc || imgUrl;
+                };
+                img.onerror = () => {
+                    img.style.opacity = "0.3";
+                    window._currentSlides[i]._resolvedImgUrl = imgUrl;
+                };
+
+                /* overlay */
+                const overlay = document.createElement("div");
+                overlay.className = "slide-overlay";
+
+                /* top row */
+                const top = document.createElement("div");
+                top.className = "slide-top";
+
+                const num = document.createElement("div");
+                num.className = "slide-num";
+                num.textContent = i + 1;
+
+                const pill = document.createElement("div");
+                pill.className = "slide-role-pill";
+                pill.textContent = role.label;
+                pill.style.background = role.color;
+                pill.style.color = role.textColor;
+
+                top.appendChild(num);
+                top.appendChild(pill);
+
+                /* bottom content */
+                const bottom = document.createElement("div");
+                bottom.className = "slide-bottom";
+
+                const roleLabel = document.createElement("div");
+                roleLabel.className = "slide-role-label";
+                roleLabel.textContent = role.name;
+                roleLabel.style.color = role.color;
+
+                const headline = document.createElement("div");
+                headline.className = "slide-headline";
+                headline.textContent = slide.headline;
+
+                const sub = document.createElement("div");
+                sub.className = "slide-sub";
+                sub.textContent = slide.sub;
+
+                const cta = document.createElement("div");
+                cta.className = "slide-cta";
+                cta.textContent = slide.cta;
+                cta.style.background = role.color;
+                cta.style.color = role.textColor;
+
+                bottom.appendChild(roleLabel);
+                bottom.appendChild(headline);
+                bottom.appendChild(sub);
+                bottom.appendChild(cta);
+
+                /* brand watermark */
+                const brand = document.createElement("div");
+                brand.className = "slide-brand";
+                brand.textContent = "Maxify";
+
+                card.appendChild(img);
+                card.appendChild(overlay);
+                card.appendChild(top);
+                card.appendChild(bottom);
+                card.appendChild(brand);
+
+                /* download button */
+                const dlBtn = document.createElement("a");
+                dlBtn.className = "dl-btn";
+                dlBtn.href = imgUrl;
+                dlBtn.target = "_blank";
+                dlBtn.rel = "noopener";
+                dlBtn.innerHTML = `<span class="dl-icon">↓</span> Download`;
+                dlBtn.title = "Opens image in new tab — right-click → Save Image";
+
+                /* pinterest pin button */
+                const pinBtn = document.createElement("button");
+                pinBtn.className = "pin-btn";
+                pinBtn.dataset.index = i;
+                pinBtn.innerHTML = pinterestSVG(14) + " Pin";
+                pinBtn.onclick = () => pinSlide(i);
+
+                const btnRow = document.createElement("div");
+                btnRow.style.cssText = "display:flex;gap:8px;align-items:center;";
+                btnRow.appendChild(dlBtn);
+                btnRow.appendChild(pinBtn);
+
+                outer.appendChild(card);
+                outer.appendChild(btnRow);
+                wrap.appendChild(outer);
+            });
+        }
+
+        /* ─────────────────────────────────────────────
+           MAIN — GENERATE REEL
+        ───────────────────────────────────────────── */
+        async function generateReel() {
+            if (!OPENROUTER_KEY || OPENROUTER_KEY.startsWith("PASTE")) {
+                setStatus("⚠️ Add your OpenRouter API key at the top of this file first.");
+                return;
+            }
+
+            const btn = document.getElementById("generate");
+            btn.disabled = true;
+
+            setStatus("Calling Gemini 2.5 Flash…", true);
+            renderSkeletons();
+
+            try {
+                /* ── OpenRouter call (OpenAI-compatible) ── */
+                const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + OPENROUTER_KEY,
+                        "HTTP-Referer": "https://clippers.glowrizz.club",
+                        "X-Title": "Maxify Reel Builder"
+                    },
+                    body: JSON.stringify({
+                        model: OR_MODEL,
+                        messages: [{ role: "user", content: buildPrompt() }]
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data?.error?.message || `HTTP ${res.status}`);
+                }
+                let raw = data.choices?.[0]?.message?.content || "";
+
+                /* strip markdown fences if present */
+                raw = raw.replace(/^```[a-z]*\n?/im, "").replace(/```\s*$/im, "").trim();
+
+                let slides;
+                try {
+                    slides = JSON.parse(raw);
+                } catch {
+                    /* try to extract JSON array from response */
+                    const match = raw.match(/\[[\s\S]*\]/);
+                    if (match) slides = JSON.parse(match[0]);
+                    else throw new Error("Could not parse Gemini response as JSON.");
+                }
+
+                if (!Array.isArray(slides) || slides.length < 5) {
+                    throw new Error("Gemini returned fewer than 5 slides.");
+                }
+
+                setStatus(`✓ Reel generated — ${window._lastFeature || "Maxify"} angle — ${slides.length} slides ready.`);
+                window._currentSlides = slides.slice(0, 5);
+                renderSlides(window._currentSlides);
+                const bv = document.getElementById("board")?.value;
+                if (bv) document.getElementById("pin-all-wrap").style.display = "block";
+
+            } catch (err) {
+                setStatus(`⚠️ Error: ${err.message}`);
+                document.getElementById("slides-section").style.display = "none";
+                console.error(err);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+
+
+        /* ─────────────────────────────────────────────
+           PINTEREST HELPERS
+        ───────────────────────────────────────────── */
+        function pinterestSVG(size = 14) {
+            return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>`;
+        }
+
+        /* load boards on page ready */
+        async function loadPinterestBoards() {
+            try {
+                const res = await fetch(
+                    "https://api.pinterest.com/v5/boards?page_size=50",
+                    { headers: { Authorization: "Bearer " + PINTEREST_TOKEN } }
+                );
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                const data = await res.json();
+                const boards = data.items || [];
+                const sel = document.getElementById("board");
+                if (!boards.length) { console.warn("No Pinterest boards found."); return; }
+                sel.innerHTML = boards.map(b =>
+                    `<option value="${b.id}">${b.name}</option>`
+                ).join("");
+                document.getElementById("board-row").style.display = "flex";
+            } catch (e) {
+                console.warn("Pinterest board load failed:", e.message);
+            }
+        }
+
+        /* pin a single slide by index */
+        async function pinSlide(index) {
+            const boardId = document.getElementById("board")?.value;
+            if (!boardId) { alert("Select a Pinterest board first."); return; }
+            const slides = window._currentSlides;
+            if (!slides || !slides[index]) return;
+
+            const slide = slides[index];
+            // Use the resolved URL stored when the image loaded, or construct directly
+            // DO NOT regenerate unsplashUrl() — source.unsplash.com redirects break Pinterest
+            const imgUrl = slide._resolvedImgUrl
+                || `https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1080&h=1920&fit=crop&crop=faces&q=80`;
+            const roleNames = ["Hook", "Context", "Surprise", "Escalation", "Payoff"];
+
+            const allPinBtns = document.querySelectorAll(".pin-btn");
+            const btn = allPinBtns[index];
+            if (btn) { btn.disabled = true; btn.innerHTML = pinterestSVG(14) + " Pinning…"; }
+
+            try {
+                const res = await fetch("https://api.pinterest.com/v5/pins", {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Bearer " + PINTEREST_TOKEN,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        board_id: boardId,
+                        title: slide.headline,
+                        description: slide.sub + " — " + slide.cta + " | Maxify — glowrizz.club",
+                        link: PINTEREST_LINK,
+                        media_source: { source_type: "image_url", url: imgUrl },
+                        note: `Slide ${index + 1}: ${roleNames[index]} — Maxify Reel Builder`
+                    })
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result?.message || "Pin failed");
+                if (btn) { btn.innerHTML = "✓ Pinned!"; btn.style.background = "#22c55e"; btn.style.color = "#fff"; }
+            } catch (e) {
+                if (btn) { btn.disabled = false; btn.innerHTML = pinterestSVG(14) + " Retry"; btn.style.background = "#ff3c3c"; }
+                console.error("Pinterest pin error:", e.message);
+            }
+        }
+
+        /* pin all 5 slides sequentially */
+        async function pinAllSlides() {
+            const boardId = document.getElementById("board")?.value;
+            if (!boardId) { alert("Select a Pinterest board first."); return; }
+            const slides = window._currentSlides;
+            if (!slides || !slides.length) return;
+
+            const allBtn = document.getElementById("pin-all-btn");
+            const statusEl = document.getElementById("pin-all-status");
+            allBtn.disabled = true;
+            statusEl.className = "pin-status";
+
+            for (let i = 0; i < slides.length; i++) {
+                statusEl.textContent = `Pinning slide ${i + 1} of 5…`;
+                await pinSlide(i);
+                await new Promise(r => setTimeout(r, 700)); /* rate-limit buffer */
+            }
+
+            allBtn.disabled = false;
+            statusEl.className = "pin-status ok";
+            statusEl.textContent = `✓ All 5 slides pinned to Pinterest!`;
+        }
+
+        loadPinterestBoards();
+    </script>
+</body>
+
+</html>

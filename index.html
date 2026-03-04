@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reel Farm — Maxify</title>
+    <meta name="description"
+        content="Generate viral looksmaxx & rizz reels for Maxify. AI copy + matched images, download as PNG." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <!--
+    NOTE: ES Modules (type="module") require a server due to browser CORS on file:// URLs.
+    Quick options:
+      Python 3: python -m http.server 8080
+      Node:     npx serve .
+      VS Code:  Live Server extension
+    Then open http://localhost:8080
+  -->
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-brand">
+            <span class="brand-dot"></span>
+            <span class="brand-name">Reel Farm</span>
+            <span class="brand-sub">by Maxify</span>
+        </div>
+        <a href="https://glowrizz.club" target="_blank" rel="noopener" class="header-link">glowrizz.club ↗</a>
+    </header>
+
+    <!-- CONTROLS -->
+    <section class="controls-section">
+        <div class="controls-row">
+            <div class="select-wrap">
+                <select id="niche-select" class="niche-select">
+                    <option value="Looksmaxx">🔬 Looksmaxx</option>
+                    <option value="Rizz">🔥 Rizz</option>
+                    <option value="Mog">👑 Mog</option>
+                    <option value="Glow Up">✨ Glow Up</option>
+                    <option value="General">⚡ General</option>
+                </select>
+            </div>
+            <button id="generate-btn" class="generate-btn">Generate Reel</button>
+        </div>
+        <p id="error-msg" class="error-msg" aria-live="polite"></p>
+    </section>
+
+    <!-- SLIDES STRIP -->
+    <section class="slides-section" id="slides-section" aria-label="Generated slides">
+        <div class="slides-strip" id="slides-strip">
+            <!-- Cards injected by slides.js -->
+            <div class="empty-state" id="empty-state">
+                <p>Pick a niche and hit <strong>Generate Reel</strong> to create your slides.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODULE ENTRY -->
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
