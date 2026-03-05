@@ -12,7 +12,7 @@
 // Token injected at runtime via Vercel env — never hardcoded
 const PINTEREST_TOKEN = process.env.PINTEREST_TOKEN || "";
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     // CORS headers so browser can call /api/search from the same origin
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
