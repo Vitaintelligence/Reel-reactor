@@ -133,6 +133,23 @@ IMAGE_BANK = [
         ["dark male", "shadow male"],
         5
     ),
+
+    # ── 12_LOOKSMAX_MODELS ───────────────────────────────────────────────────
+    (
+        "12_LOOKSMAX_MODELS/chico", "chico",
+        ["chico lachowski", "francisco lachowski"],
+        10
+    ),
+    (
+        "12_LOOKSMAX_MODELS/jordan", "jordan",
+        ["jordan barrett", "male model face"],
+        10
+    ),
+    (
+        "12_LOOKSMAX_MODELS/hot_men", "hot_men",
+        ["hot men", "handsome man"],
+        10
+    ),
 ]
 
 # ─── TARGET SUMMARY ───────────────────────────────────────────────────────────

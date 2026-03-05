@@ -68,11 +68,11 @@ let _loadPromise = null;  // Shared promise so parallel calls don't double-fetch
  *   { type: "remote",   url: "https://pinimg..." }  — Pinterest via proxy
  *   { type: "fallback", canvas: HTMLCanvasElement } — dark gradient
  */
-export async function preloadImages(slidesData) {
+export async function preloadImages(slidesData, niche = "") {
     const library = await _getLibrary();
 
     return Promise.all(
-        slidesData.map((slide, i) => _pickImage(library, i, slide.image_query))
+        slidesData.map((slide, i) => _pickImage(library, i, slide.image_query, niche))
     );
 }
 
@@ -104,8 +104,18 @@ async function _getLibrary() {
 
 // ─── SMART SELECTOR ───────────────────────────────────────────────────────
 
-async function _pickImage(library, slideIndex, aiHint) {
-    const pool = SLIDE_POOLS[slideIndex] || SLIDE_POOLS[0];
+async function _pickImage(library, slideIndex, aiHint, niche = "") {
+    const isMoggerNiche = niche.toLowerCase().includes("looksmaxx") || niche.toLowerCase().includes("rizz");
+    let pool = SLIDE_POOLS[slideIndex] || SLIDE_POOLS[0];
+
+    // Override pools for mogger niches (Looksmaxx, Rizz)
+    if (isMoggerNiche) {
+        pool = {
+            primary: ["chico", "jordan", "hot_men"],
+            secondary: ["sigma_portraits", "luxury_m", "gym_male", "dark_sigma"]
+        };
+    }
+
     const allCats = [...pool.primary, ...pool.secondary];
 
     // Build a weighted candidate list

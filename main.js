@@ -62,7 +62,7 @@ async function handleGenerate() {
 
         // ── Step 3: Preload all 5 images in parallel
         console.log("[main] Preloading images…");
-        const images = await preloadImages(slidesData);
+        const images = await preloadImages(slidesData, niche);
         console.log(`[main] ✓ Images ready (${images.length})`);
 
         // ── Step 4: Render slides to DOM
