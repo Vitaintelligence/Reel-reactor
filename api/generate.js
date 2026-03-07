@@ -20,7 +20,42 @@ module.exports = async function handler(req, res) {
         return res.status(500).json({ error: "OPENROUTER_KEY is not configured in Vercel Environment Variables" });
     }
 
-    const prompt = `You are writing copy for a viral TikTok/Instagram slideshow for Maxify —
+    const isAskOut = niche === "AskOut";
+    const prompt = isAskOut
+        ? `You are writing copy for a highly viral TikTok/Instagram anonymous question loop for Maxify's "AskOut" feature.
+
+AskOut is an anonymous curiosity engine and flirting game (NGL x TikTok). Users post prompts like "Rate me honestly" or "Would you date me?" and receive anonymous replies.
+
+Write EXACTLY 5 slides. Voice: Gen-Z, authentic, dark aesthetic, curiosity-inducing.
+
+PSYCHOLOGICAL STRUCTURE:
+Slide 1 — HOOK (Brutal curiosity trigger to stop the scroll)
+  Example: "girls, be brutally honest" or "someone said i'm unattractive"
+
+Slide 2 — CONTEXT (Emotional framing)
+  Example: "my friends say i look intimidating" or "is this a red flag?"
+
+Slide 3 — REVEAL (Drop a controversial or specific personal statement)
+  Example: "i've never asked a girl out before. comment your first impression."
+
+Slide 4 — INTERACTION (The actual AskOut question)
+  Example: "would you go on a date with me?" or "rate me honestly (1-10)"
+
+Slide 5 — CTA (The Viral Loop)
+  Must end with: "answer anonymously on maxify — glowrizz.club"
+
+For each slide return:
+- label: tiny pill text context (e.g. "1. the hook")
+- headline: main text, lowercase, max 10 words, bold
+- sub: explanation text, lowercase, max 18 words
+- image_query: 3-word pollinations search (For AskOut ALWAYS use queries like "dark neon aesthetic", "mysterious silhouette", "phone screen glow")
+
+Return ONLY valid JSON array:
+[
+  {"label":"...","headline":"...","sub":"...","image_query":"..."},
+   ...
+]`
+        : `You are writing copy for a viral TikTok/Instagram slideshow for Maxify —
 an AI looksmaxxing and rizz app. Niche: ${niche}.
 
 Maxify features: AI facial scan, canthal tilt analysis, hunter eyes score,
@@ -60,7 +95,7 @@ For each slide return:
 - label: pill text (e.g. "1. the scan that changed everything")
 - headline: main text, lowercase, max 10 words
 - sub: explanation text, lowercase, max 18 words
-- image_query: 3-word Unsplash search (match the emotional role of each slide)
+- image_query: 3-word pollinations search (match the emotional role of each slide)
 
 Return ONLY valid JSON array, no markdown, no extra text:
 [
