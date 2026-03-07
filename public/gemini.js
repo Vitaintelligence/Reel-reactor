@@ -12,7 +12,7 @@ const ENDPOINT = "/api/generate";
  * generateCopy(niche) → Promise<SlideData[]>
  * Returns array of 5 slide objects: { label, headline, sub, image_query }
  */
-export async function generateCopy(niche) {
+export async function generateCopy(niche, style = "default") {
     let response;
     try {
         response = await fetch(ENDPOINT, {
@@ -20,7 +20,7 @@ export async function generateCopy(niche) {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ niche })
+            body: JSON.stringify({ niche, style })
         });
     } catch (networkErr) {
         throw new Error(`Network error — check your connection. (${networkErr.message})`);

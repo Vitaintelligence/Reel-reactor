@@ -54,7 +54,7 @@ export function clearSlides() {
  *   { type: "remote",   url: "https://pinimg.com/..."      } — Pinterest via proxy
  *   { type: "fallback", canvas: HTMLCanvasElement          } — dark gradient
  */
-export async function renderAll(slidesData, imageResults) {
+export async function renderAll(slidesData, imageResults, style = "default") {
     await _ensureFonts();
 
     const strip = document.getElementById("slides-strip");
@@ -73,7 +73,7 @@ export async function renderAll(slidesData, imageResults) {
 
         /* ── Card ── */
         const card = document.createElement("div");
-        card.className = "slide-card";
+        card.className = `slide-card style-${style}`;
 
         /* --- BACKGROUND IMAGE --- */
         const hasImg = imgResult.type === "local" || imgResult.type === "remote";
@@ -144,7 +144,7 @@ export async function renderAll(slidesData, imageResults) {
  * 2. If CORS fails → render text on dark gradient (always works)
  * 3. Export 1080x1920 PNG
  */
-export function downloadSlide(slideData, index, imgResult) {
+export function downloadSlide(slideData, index, imgResult, style = "default") {
     const hasUrl = (imgResult?.type === "local" || imgResult?.type === "remote") && imgResult.url;
 
     if (hasUrl) {
@@ -154,13 +154,13 @@ export function downloadSlide(slideData, index, imgResult) {
         testImg.crossOrigin = "anonymous";
 
         testImg.onload = () => {
-            const canvas = _renderFullCanvas(slideData, index, testImg);
+            const canvas = _renderFullCanvas(slideData, index, testImg, style);
             _exportCanvas(canvas, index);
         };
 
         testImg.onerror = () => {
             // Remote CDN CORS blocked — use gradient fallback
-            const canvas = _renderTextCanvas(slideData, index, null);
+            const canvas = _renderTextCanvas(slideData, index, null, style);
             _exportCanvas(canvas, index);
         };
 
@@ -168,14 +168,14 @@ export function downloadSlide(slideData, index, imgResult) {
     } else {
         // Gradient fallback canvas
         const bgCanvas = imgResult?.canvas || null;
-        const canvas = _renderFullCanvas(slideData, index, bgCanvas);
+        const canvas = _renderFullCanvas(slideData, index, bgCanvas, style);
         _exportCanvas(canvas, index);
     }
 }
 
 /* ─── CANVAS RENDERING ────────────────────────────────────── */
 
-function _renderFullCanvas(slideData, index, bgSource) {
+function _renderFullCanvas(slideData, index, bgSource, style = "default") {
     const canvas = document.createElement("canvas");
     canvas.width = W;
     canvas.height = H;
@@ -185,33 +185,41 @@ function _renderFullCanvas(slideData, index, bgSource) {
 
     // 1. Background
     if (bgSource) {
-        _drawBackground(ctx, bgSource);
+        if (style === "crafty") {
+            // Crafty background is bright, draw image but maybe fade it or leave it
+            _drawBackground(ctx, bgSource);
+        } else {
+            _drawBackground(ctx, bgSource);
+        }
     } else {
-        _drawGradientBg(ctx);
+        _drawGradientBg(ctx, style);
     }
 
     // 2. Scrim
-    _drawScrim(ctx, layout.region);
+    _drawScrim(ctx, layout.region, style);
 
     // 3. Text
-    _drawSlideText(ctx, slideData, layout);
+    _drawSlideText(ctx, slideData, layout, style);
 
     return canvas;
 }
 
-function _renderTextCanvas(slideData, index, bgCanvas) {
+function _renderTextCanvas(slideData, index, bgCanvas, style = "default") {
     const canvas = document.createElement("canvas");
     canvas.width = W;
     canvas.height = H;
     const ctx = canvas.getContext("2d");
     const layout = LAYOUTS[index] || LAYOUTS[1];
+
     if (bgCanvas) {
         ctx.drawImage(bgCanvas, 0, 0, W, H);
     } else {
-        _drawGradientBg(ctx);
+        _drawGradientBg(ctx, style);
     }
-    _drawScrim(ctx, layout.region);
-    _drawSlideText(ctx, slideData, layout);
+
+    _drawScrim(ctx, layout.region, style);
+    _drawSlideText(ctx, slideData, layout, style);
+
     return canvas;
 }
 
@@ -224,7 +232,13 @@ function _drawBackground(ctx, src) {
     ctx.drawImage(src, (W - dw) / 2, (H - dh) / 2, dw, dh);
 }
 
-function _drawGradientBg(ctx) {
+function _drawGradientBg(ctx, style = "default") {
+    if (style === "crafty") {
+        ctx.fillStyle = "#f4f4ece6"; // Paper-like light texture base
+        ctx.fillRect(0, 0, W, H);
+        return;
+    }
+
     const grad = ctx.createLinearGradient(0, 0, 0, H);
     grad.addColorStop(0, "#0f0c1a");
     grad.addColorStop(0.4, "#0d0d1e");
@@ -240,7 +254,18 @@ function _drawGradientBg(ctx) {
     ctx.fillRect(0, 0, W, H);
 }
 
-function _drawScrim(ctx, region) {
+function _drawScrim(ctx, region, style = "default") {
+    if (style === "crafty") {
+        // Very subtle white fade to ensure black text pops
+        const grad = ctx.createLinearGradient(0, 0, 0, H);
+        grad.addColorStop(0, "rgba(255,255,255,0.2)");
+        grad.addColorStop(0.5, "rgba(255,255,255,0.7)");
+        grad.addColorStop(1, "rgba(255,255,255,0.95)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+        return;
+    }
+
     let grad;
     if (region === "top") {
         grad = ctx.createLinearGradient(0, 0, 0, H);
@@ -267,9 +292,9 @@ function _drawScrim(ctx, region) {
     ctx.fillRect(0, 0, W, H);
 }
 
-function _drawSlideText(ctx, slide, layout) {
+function _drawSlideText(ctx, slide, layout, style = "default") {
     // Pill label
-    _drawPill(ctx, slide.label, W / 2, layout.pillY);
+    _drawPill(ctx, slide.label, W / 2, layout.pillY, style);
 
     // Headline
     const headLineCount = _drawWrappedText(ctx, {
@@ -277,12 +302,12 @@ function _drawSlideText(ctx, slide, layout) {
         x: W / 2,
         y: layout.headY,
         maxWidth: 900,
-        fontSize: layout.fontSize,
-        fontWeight: 800,
-        color: "#000000",
-        bgColor: "#ffffff",
+        fontSize: style === "crafty" ? layout.fontSize + 16 : layout.fontSize,
+        fontWeight: style === "crafty" ? 900 : 800,
+        color: style === "crafty" ? "#0a0a0a" : "#000000",
+        bgColor: style === "crafty" ? null : "#ffffff",
         shadow: false,
-        lineHeight: layout.lh
+        lineHeight: style === "crafty" ? layout.lh + 12 : layout.lh
     });
 
     // Sub — shift down by extra lines
@@ -293,21 +318,29 @@ function _drawSlideText(ctx, slide, layout) {
         y: subY,
         maxWidth: 860,
         fontSize: layout.subSize,
-        fontWeight: 400,
-        color: "rgba(255,255,255,0.82)",
-        shadow: true,
+        fontWeight: style === "crafty" ? 600 : 400,
+        color: style === "crafty" ? "#333333" : "rgba(255,255,255,0.82)",
+        shadow: style === "crafty" ? false : true,
         lineHeight: layout.subLh
     });
 }
 
-function _drawPill(ctx, text, cx, cy) {
+function _drawPill(ctx, text, cx, cy, style = "default") {
     ctx.font = `700 32px ${FONT_FAMILY}`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = "#ffffff";
-    ctx.shadowColor = "rgba(0,0,0,0.85)";
-    ctx.shadowBlur = 24;
-    ctx.shadowOffsetY = 2;
+    ctx.fillStyle = style === "crafty" ? "#0a0a0a" : "#ffffff";
+
+    if (style === "crafty") {
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+    } else {
+        ctx.shadowColor = "rgba(0,0,0,0.85)";
+        ctx.shadowBlur = 24;
+        ctx.shadowOffsetY = 2;
+    }
+
     ctx.fillText(text.toUpperCase(), cx, cy);
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
@@ -439,7 +472,7 @@ function _hideEmpty() {
 
 /* ─── GLOBAL EXPORT FUNCTIONS ─────────────────────────────── */
 
-export async function downloadAllAsZip(slidesData, imageResults) {
+export async function downloadAllAsZip(slidesData, imageResults, style = "default") {
     if (!window.JSZip) {
         alert("JSZip library not loaded. Check internet connection.");
         return;
@@ -462,7 +495,7 @@ export async function downloadAllAsZip(slidesData, imageResults) {
     setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
-export async function downloadAllAsVideo(slidesData, imageResults) {
+export async function downloadAllAsVideo(slidesData, imageResults, style = "default") {
     // 1. Render all 5 canvases into memory
     const canvases = [];
     for (let i = 0; i < 5; i++) {

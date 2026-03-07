@@ -10,7 +10,7 @@ module.exports = async function handler(req, res) {
         return res.status(405).json({ error: "Method not allowed" });
     }
 
-    const { niche } = req.body || {};
+    const { niche, style } = req.body || {};
     if (!niche) {
         return res.status(400).json({ error: "Niche is required" });
     }
@@ -21,6 +21,13 @@ module.exports = async function handler(req, res) {
     }
 
     const isAskOut = niche === "AskOut";
+    const isCrafty = style === "crafty";
+
+    // Aesthetic instruction block to be appended to any prompt
+    const aestheticInstructions = isCrafty
+        ? "AESTHETIC: 'Crafty' editorial magazine style. Voice must be slightly poetic, highly aesthetically pleasing but blunt. For image_query ALWAYS use queries like 'white magazine cutout', 'editorial aesthetic', 'paper texture collage'."
+        : "AESTHETIC: Standard dark bold. Voice: first person, raw, authentic. For image_query use 3-word pollinations search matching the emotional role of each slide (e.g. 'dark moody aesthetic').";
+
     const prompt = isAskOut
         ? `You are writing copy for a highly viral TikTok/Instagram anonymous question loop for Maxify's "AskOut" feature.
 
@@ -64,8 +71,8 @@ rizz engine (screenshot your chat → AI tells you what to say),
 opener generator, The Dojo (looksmaxx theory, mewing, attraction science),
 weekly tracking.
 
-Write EXACTLY 5 slides. Voice: first person, lowercase, personal, authentic.
-Like a real guy sharing what he learned. NOT corporate. NOT salesy.
+Write EXACTLY 5 slides. NOT corporate. NOT salesy.
+${aestheticInstructions}
 
 PSYCHOLOGICAL STRUCTURE:
 Slide 1 — HOOK: Forbidden knowledge or personal confession.
