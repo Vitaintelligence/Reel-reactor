@@ -302,21 +302,15 @@ function _drawSlideText(ctx, slide, layout) {
 
 function _drawPill(ctx, text, cx, cy) {
     ctx.font = `700 32px ${FONT_FAMILY}`;
-    const tw = ctx.measureText(text).width;
-    const pw = tw + 60;
-    const ph = 32 + 24;
-    const px = cx - pw / 2;
-    const py = cy - ph / 2;
-
-    ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    _rrPath(ctx, px, py, pw, ph, 40);
-    ctx.fill();
-
-    ctx.fillStyle = "#000000";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(text, cx, cy);
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowColor = "rgba(0,0,0,0.85)";
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 2;
+    ctx.fillText(text.toUpperCase(), cx, cy);
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
 }
 
 function _drawWrappedText(ctx, opts) {

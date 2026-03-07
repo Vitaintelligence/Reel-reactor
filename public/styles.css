@@ -407,22 +407,22 @@ body {
   bottom: 0;
 }
 
-/* White pill label */
+/* Pill label (plain text) */
 .card-pill {
-  background: #ffffff;
-  color: #000000;
+  color: #ffffff;
   font-family: var(--font);
   font-weight: 800;
-  font-size: 0.75rem;
-  letter-spacing: -0.01em;
-  padding: 6px 16px;
-  border-radius: 40px;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  padding: 0;
   white-space: nowrap;
   max-width: 93%;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.95);
+  margin-bottom: 8px;
 }
 
 /* Headline */

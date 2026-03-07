@@ -39,7 +39,7 @@ const SLIDE_POOLS = [
     },
     {
         // SURPRISE — Real, relatable, personal moment.
-        primary: ["07_PHONE_SOCIAL_MEDIA", "08_LONELY_EMOTIONAL"],
+        primary: ["08_LONELY_EMOTIONAL"],
         secondary: ["soft_girl", "02_REACTION_IMAGES", "04_RELATIONSHIP_IMAGES"]
     },
     {
