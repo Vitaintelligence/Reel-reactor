@@ -326,45 +326,56 @@ function _drawWrappedText(ctx, opts) {
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
 
-    if (shadow) {
+    if (shadow && !bgColor) {
         ctx.shadowColor = "rgba(0,0,0,0.85)";
         ctx.shadowBlur = 28;
         ctx.shadowOffsetY = 3;
     }
 
     const paras = text.split("\n");
-    let lineCount = 0;
+    const allLines = [];
     paras.forEach(para => {
         _wordWrap(ctx, para.trim(), maxWidth).forEach(line => {
-            if (bgColor) {
-                const tw = ctx.measureText(line).width;
-                const padX = 32;
-                const padY = 16;
-                ctx.fillStyle = bgColor;
-                ctx.shadowColor = "transparent";
-                ctx.beginPath();
-                if (ctx.roundRect) {
-                    ctx.roundRect(x - (tw / 2) - padX / 2, y + lineCount * lineHeight - padY / 2 + 6, tw + padX, fontSize + padY, 12);
-                } else {
-                    ctx.fillRect(x - (tw / 2) - padX / 2, y + lineCount * lineHeight - padY / 2 + 6, tw + padX, fontSize + padY);
-                }
-                ctx.fill();
-
-                if (shadow) {
-                    ctx.shadowColor = "rgba(0,0,0,0.85)";
-                    ctx.shadowBlur = 28;
-                    ctx.shadowOffsetY = 3;
-                }
-                ctx.fillStyle = color;
-            }
-            ctx.fillText(line, x, y + lineCount * lineHeight);
-            lineCount++;
+            allLines.push(line);
         });
+    });
+
+    let maxLineWidth = 0;
+    allLines.forEach(line => {
+        const tw = ctx.measureText(line).width;
+        if (tw > maxLineWidth) maxLineWidth = tw;
+    });
+
+    if (bgColor && allLines.length > 0) {
+        const padX = 40;
+        const padY = 24;
+        const totalHeight = allLines.length * lineHeight;
+
+        ctx.fillStyle = bgColor;
+        ctx.shadowColor = "transparent";
+        ctx.beginPath();
+        if (ctx.roundRect) {
+            ctx.roundRect(x - (maxLineWidth / 2) - padX / 2, y - padY / 2 + 6, maxLineWidth + padX, totalHeight - lineHeight + fontSize + padY, 16);
+        } else {
+            ctx.fillRect(x - (maxLineWidth / 2) - padX / 2, y - padY / 2 + 6, maxLineWidth + padX, totalHeight - lineHeight + fontSize + padY);
+        }
+        ctx.fill();
+
+        if (shadow) {
+            ctx.shadowColor = "rgba(0,0,0,0.85)";
+            ctx.shadowBlur = 28;
+            ctx.shadowOffsetY = 3;
+        }
+    }
+
+    ctx.fillStyle = color;
+    allLines.forEach((line, i) => {
+        ctx.fillText(line, x, y + i * lineHeight);
     });
 
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
-    return lineCount;
+    return allLines.length;
 }
 
 function _wordWrap(ctx, text, maxWidth) {
