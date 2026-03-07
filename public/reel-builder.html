@@ -377,9 +377,12 @@
             font-size: 1.45rem;
             line-height: 1.15;
             letter-spacing: -0.02em;
-            color: #fff;
+            color: #000;
+            background: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: inline-block;
             margin-bottom: 10px;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
         }
 
         .slide-sub {
@@ -894,8 +897,8 @@ Return ONLY a JSON array. No markdown. No explanation. No extra keys.
            UNSPLASH URL
         ───────────────────────────────────────────── */
         function unsplashUrl(query, sig) {
-            const q = encodeURIComponent(query.trim());
-            return `https://source.unsplash.com/1080x1920/?${q}&sig=${sig}`;
+            const q = encodeURIComponent(query.trim() + " photorealistic");
+            return `https://image.pollinations.ai/prompt/${q}?width=1080&height=1920&nologo=true&seed=${sig}`;
         }
 
         /* ─────────────────────────────────────────────

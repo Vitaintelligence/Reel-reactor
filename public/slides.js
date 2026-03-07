@@ -279,8 +279,9 @@ function _drawSlideText(ctx, slide, layout) {
         maxWidth: 900,
         fontSize: layout.fontSize,
         fontWeight: 800,
-        color: "#ffffff",
-        shadow: true,
+        color: "#000000",
+        bgColor: "#ffffff",
+        shadow: false,
         lineHeight: layout.lh
     });
 
@@ -319,7 +320,7 @@ function _drawPill(ctx, text, cx, cy) {
 }
 
 function _drawWrappedText(ctx, opts) {
-    const { text, x, y, maxWidth, fontSize, fontWeight, color, shadow, lineHeight } = opts;
+    const { text, x, y, maxWidth, fontSize, fontWeight, color, bgColor, shadow, lineHeight } = opts;
     ctx.font = `${fontWeight} ${fontSize}px ${FONT_FAMILY}`;
     ctx.fillStyle = color;
     ctx.textAlign = "center";
@@ -335,6 +336,27 @@ function _drawWrappedText(ctx, opts) {
     let lineCount = 0;
     paras.forEach(para => {
         _wordWrap(ctx, para.trim(), maxWidth).forEach(line => {
+            if (bgColor) {
+                const tw = ctx.measureText(line).width;
+                const padX = 32;
+                const padY = 16;
+                ctx.fillStyle = bgColor;
+                ctx.shadowColor = "transparent";
+                ctx.beginPath();
+                if (ctx.roundRect) {
+                    ctx.roundRect(x - (tw / 2) - padX / 2, y + lineCount * lineHeight - padY / 2 + 6, tw + padX, fontSize + padY, 12);
+                } else {
+                    ctx.fillRect(x - (tw / 2) - padX / 2, y + lineCount * lineHeight - padY / 2 + 6, tw + padX, fontSize + padY);
+                }
+                ctx.fill();
+
+                if (shadow) {
+                    ctx.shadowColor = "rgba(0,0,0,0.85)";
+                    ctx.shadowBlur = 28;
+                    ctx.shadowOffsetY = 3;
+                }
+                ctx.fillStyle = color;
+            }
             ctx.fillText(line, x, y + lineCount * lineHeight);
             lineCount++;
         });
